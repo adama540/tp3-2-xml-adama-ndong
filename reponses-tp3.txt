@@ -1,0 +1,37 @@
+Rendu - TP3 : De la liste des étudiants à la page web (XPath, XSLT, CSS)
+Matricule - ISEPAT202603252 
+
+=== ÉTAPE 1 : Lire l'arbre ===
+- count(//etudiant) = 12
+- count(//note) = 34
+- count(//etudiant[email]) = 9
+
+Pourquoi count(//etudiant[email]) ne vaut-il pas count(//etudiant) ?
+Réponse : Parce que certains étudiants n'ont pas de balise <email> renseignée dans leur structure XML (leur email est absent, affichant la mention "non renseigné" dans le tableau).
+
+
+=== ÉTAPE 2 : Interroger avec XPath ===
+2a. Les noms des étudiants de la classe L1-B :
+//etudiant[@classe='L1-B']/nom/text()
+
+2b. Les matricules des étudiants sans email :
+//etudiant[not(email)]/@matricule
+
+2c. La note de XPath de l'étudiant ISEP26-007 :
+//etudiant[@matricule='ISEP26-007']/notes/note[@matiere='XPath']/text()
+
+2d. Le nombre d'étudiants qui ont moins de trois notes :
+count(//etudiant[count(notes/note) < 3])
+
+2e. La moyenne de la promotion en XML (somme divisée par nombre) :
+sum(//note) div count(//note)
+
+2f. Le nombre d'étudiants dont la moyenne est d'au moins 10 :
+count(//etudiant[(sum(notes/note) div count(notes/note)) >= 10])
+
+2g. Les matricules des étudiants dont la note de XSD dépasse 15 :
+//etudiant[notes/note[@matiere='XSD'] > 15]/@matricule
+
+2h. Le prénom du dernier étudiant de L1-A :
+//etudiant[last()][@classe='L1-A']/prenom
+Explication : //etudiant[last()] sélectionne le tout dernier étudiant du document XML global, et le prédicat [@classe='L1-A'] filtre pour vérifier s'il appartient bien à cette classe. S'il appartient à une autre classe (comme L1-B), l'expression ne renvoie rien.
